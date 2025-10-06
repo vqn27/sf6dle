@@ -1,0 +1,148 @@
+<div class="search-wrapper">
+    <!-- Hover preview for randomItem
+    <div class="random-preview-inline" tabindex="0" aria-label="Random preview">
+      <span class="random-preview-label">Random:</span>
+      <span class="random-preview-value">{{ randomItem()?.name || '—' }}</span>
+    </div>
+    -->
+    
+    <h1 class="text-xl font-bold text-gray-800 mb-6">Street Fighter 6 dle</h1>
+     
+    <div class="search-dropdown-container">
+      
+      <!-- 1. Search Input Field -->
+      <input
+        type="text"
+        placeholder="Type to search items..."
+        [ngModel]="searchTerm()"
+        (ngModelChange)="searchTerm.set($event); isDropdownOpen.set(true)"
+        (focus)="onInputFocus()"
+        (blur)="onInputBlur()"
+        [disabled]="selectedItem()?.id === randomItem()?.id"
+        class="search-input"
+      >
+  
+      <!-- 2. Dropdown List (Custom Options Overlay) -->
+  <div *ngIf="isDropdownOpen()" [class.disabled-dropdown]="selectedItem()?.id === randomItem()?.id" class="dropdown-list">
+        
+        <!-- No Results Message -->
+        <div *ngIf="filteredItemList().length === 0" class="no-results-option">
+          No results found for "{{ searchTerm() }}"
+        </div>
+  
+        <!-- Options Loop -->
+        @for (item of filteredItemList(); track item.id) {
+          <div 
+            class="dropdown-option" 
+            (mousedown)="selectItem(item)" 
+            [class.selected]="item.id === selectedItem()?.id"
+          >
+            <!-- Item Image -->
+            <img 
+              [src]="item.photoUrl" 
+              [alt]="item.name" 
+              class="option-photo"
+              onerror="this.src='https://placehold.co/50x50/cccccc/000000?text=Error'"
+            >
+            
+            <!-- Item Details -->
+            <div class="option-details">
+              <span class="option-name">{{ item.name }}</span>
+              <span class="option-desc">{{ item.fightingStyle }}</span>
+            </div>
+          </div>
+        }
+      </div>
+    </div>
+  
+    <hr class="my-8 border-gray-200">
+  
+    <!-- 3. Selected Item Display (each part in its own box) -->
+    <div class="selected-item-display">
+  <div *ngIf="selectedItem() as s" [class.random-match]="s.id === randomItem()?.id" class="item-card">
+
+        <!-- Main selected item grid (per-box comparisons to randomItem) -->
+        
+
+        <!-- Recent selections below the grid (match selected-item layout, miniaturized) -->
+        <div class="recent-selections" *ngIf="selectionHistory().length > 0">
+          <div class="recent-list">
+            @for (h of selectionHistory(); track h.id) {
+              <div class="recent-tile" [class.random-match]="h.id === randomItem()?.id">
+                <div class="selected-grid recent-grid">
+
+                  <!-- Image box -->
+                  <div class="box-wrapper">
+                    <h5 class="box-title small">Character
+                      <span class="box-tooltip" role="tooltip">Large portrait of the selected character.</span>
+                    </h5>
+                    <!-- add data-name so we can show the name on hover via CSS; tabindex makes it focusable for keyboard users -->
+                    <div class="selected-box image-box recent-selected-box" [attr.data-name]="h.name" tabindex="0" [class.box-random-match]="h.name === randomItem()?.name">
+                      <img [src]="h.photoUrl" [alt]="h.name" class="display-photo">
+                    </div>
+                  </div>
+
+                  <!-- Name box -->
+                  <div class="box-wrapper">
+                    <h5 class="box-title small">Game Origin
+                      <span class="box-tooltip" role="tooltip">The character's first playable appearance.</span>
+                    </h5>
+                    <div class="selected-box name-box recent-selected-box" [class.box-random-match]="h.gameAppearance === randomItem()?.gameAppearance">
+                      <div class="box-content">{{ h.gameAppearance }}</div>
+                    </div>
+                  </div>
+
+                  <!-- Fighting style box -->
+                  <div class="box-wrapper">
+                    <h5 class="box-title small">Fighting
+                      <span class="box-tooltip" role="tooltip">Primary fighting style or archetype used in combat.</span>
+                    </h5>
+                    <div class="selected-box desc-box recent-selected-box" [class.box-random-match]="h.fightingStyle === randomItem()?.fightingStyle">
+                      <div class="box-content">{{ h.fightingStyle }}</div>
+                    </div>
+                  </div>
+
+                  <!-- Hair box -->
+                  <div class="box-wrapper">
+                    <h5 class="box-title small">Hair
+                      <span class="box-tooltip" role="tooltip">Hair style or color details.</span>
+                    </h5>
+                    <div class="selected-box hair-box recent-selected-box" [class.box-random-match]="h.hair === randomItem()?.hair">
+                      <div class="box-content">{{ h.hair }}</div>
+                    </div>
+                  </div>
+
+                  <!-- Country box -->
+                  <div class="box-wrapper">
+                    <h5 class="box-title small">Country
+                      <span class="box-tooltip" role="tooltip">Character's country of origin.</span>
+                    </h5>
+                    <div class="selected-box country-box recent-selected-box" [class.box-random-match]="h.country === randomItem()?.country">
+                      <div class="box-content">{{ h.country }}</div>
+                    </div>
+                  </div>
+
+                  <!-- Archetype box -->
+                  <div class="box-wrapper">
+                    <h5 class="box-title small">Archetype
+                      <span class="box-tooltip" role="tooltip">Primary role or archetype used in the roster.</span>
+                    </h5>
+                    <div class="selected-box arche-box recent-selected-box" [class.box-random-match]="h.archetype === randomItem()?.archetype">
+                      <div class="box-content">{{ h.archetype }}</div>
+                    </div>
+                  </div>
+
+                </div>
+              </div>
+            }
+          </div>
+        </div>
+      </div> <!-- /.item-card -->
+      <ng-template #noSelection>
+        <div class="no-selection-message">
+          Please use the searchable dropdown to select an item.
+        </div>
+      </ng-template>
+    </div> <!-- /.selected-item-display -->
+  </div>
+  

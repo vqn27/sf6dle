@@ -1,0 +1,434 @@
+/* Base Styles */
+.search-wrapper {
+    max-width: 600px;
+    margin: 20px auto;
+    padding: 30px;
+    background-color: #ffffff;
+    border-radius: 12px;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+    font-family: 'Inter', sans-serif;
+  }
+
+  /* Center the page heading and inline random preview */
+  .search-wrapper h1 {
+    text-align: center;
+    margin-left: 0;
+    margin-right: 0;
+  }
+  
+  /* Custom Dropdown Container */
+  .search-dropdown-container {
+    position: relative; /* Crucial for positioning the dropdown list */
+  }
+  
+  /* Input Field Styling */
+  .search-input {
+    width: 100%;
+    padding: 12px 20px;
+    border: 2px solid #ddd;
+    border-radius: 8px;
+    box-sizing: border-box;
+    font-size: 16px;
+    transition: border-color 0.3s, box-shadow 0.3s;
+  }
+  
+  .search-input:focus {
+    border-color: #007bff;
+    box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.2);
+    outline: none;
+  }
+  
+  /* Dropdown List (The floating options box) */
+  .dropdown-list {
+    position: absolute;
+    z-index: 1000;
+    width: 100%;
+    max-height: 300px;
+    overflow-y: auto;
+    background-color: white;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    margin-top: 4px;
+  }
+
+  /* When dropdown is disabled (selected item matches randomItem), prevent interaction and visually mute it */
+  .dropdown-list.disabled-dropdown {
+    pointer-events: none; /* no clicks */
+    opacity: 0.6;
+    filter: grayscale(0.25);
+  }
+
+  /* Dim the input when the selection matches the random item */
+  .search-input[disabled] {
+    background-color: #f5f6f8;
+    color: #8a8a8a;
+    border-color: #ddd;
+    cursor: not-allowed;
+    box-shadow: none;
+  }
+  
+  /* Individual Option Styling */
+  .dropdown-option {
+    display: flex;
+    align-items: center;
+    padding: 10px 15px;
+    cursor: pointer;
+    transition: background-color 0.15s;
+    border-bottom: 1px solid #eee;
+  }
+  
+  .dropdown-option:last-child {
+    border-bottom: none;
+  }
+  
+  .dropdown-option:hover {
+    background-color: #f0f8ff;
+  }
+  
+  .dropdown-option.selected {
+      background-color: #e0f0ff;
+      font-weight: 600;
+      border-left: 4px solid #007bff;
+      padding-left: 11px;
+  }
+  
+  .option-photo {
+    width: 40px;
+    height: 40px;
+    border-radius: 4px;
+    margin-right: 15px;
+    object-fit: cover;
+    border: 1px solid #ddd;
+  }
+  
+  .option-details {
+    display: flex;
+    flex-direction: column;
+    /* Use flex-basis to ensure text area takes up remaining space */
+    flex-basis: calc(100% - 55px); 
+    min-width: 0; /* Important for flex items with text-overflow */
+  }
+  
+  .option-name {
+    font-size: 1em;
+    color: #333;
+    font-weight: 500;
+  }
+  
+  .option-desc {
+    font-size: 0.8em;
+    color: #666;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  
+  .no-results-option {
+      padding: 10px 15px;
+      color: #999;
+      font-style: italic;
+      text-align: center;
+  }
+  
+  /* Selected Item Display */
+  .selected-item-display {
+      min-height: 150px;
+      display: flex;
+      flex-direction: column;
+  }
+  
+  .item-card {
+    padding: 20px;
+    background-color: #f4f7fa;
+    border: 1px solid #cceeff;
+    border-radius: 8px;
+  }
+
+  /* When a container (selected-item card or recent tile) has `random-match`, only the .selected-box
+     elements directly inside that container should receive the green accent. This avoids coloring
+     other boxes in other containers. Use direct descendant selector to limit scope. */
+  .item-card.random-match > .selected-grid .selected-box,
+  .recent-tile.random-match > .selected-grid .selected-box,
+  .recent-tile.random-match .recent-grid .selected-box {
+    border-color: #6fc36f; /* accent green */
+    background: linear-gradient(180deg, #ffffff, #f4fff4);
+  }
+
+  /* only selected-box elements should be green; titles remain unchanged */
+  
+  .item-content {
+    display: flex;
+  }
+
+  .no-selection-message {
+    padding: 30px;
+    text-align: center;
+    color: #999;
+    background-color: #f0f0f0;
+    border-radius: 6px;
+    font-style: italic;
+    border: 1px dashed #ccc;
+  }
+
+  /* Make four equal-width columns so each selected box has the same width/height */
+  .selected-grid {
+    display: grid;
+    grid-template-columns: repeat(6, 1fr); /* six equal columns to fit wrappers */
+    grid-auto-rows: auto; /* allow boxes to size based on width (we use aspect-ratio) */
+    gap: 10px;
+    align-items: start;
+  }
+
+  .selected-box {
+    background: white;
+    border: 1px solid #e6eef9;
+    padding: 12px;
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(2, 6, 23, 0.04);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center; /* center contents so text/image look balanced */
+    text-align: center;
+  }
+
+  /* Make the selected box a square. Width follows column width; height matches via aspect-ratio */
+  .box-wrapper .selected-box {
+    width: 100%;
+    aspect-ratio: 1 / 1;
+    padding: 12px;
+    box-sizing: border-box;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  /* wrapper holds the title above each box and centers content */
+  .box-wrapper {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: center; /* center title and box */
+  }
+
+  .box-wrapper .box-title {
+    text-align: center;
+    margin: 0 0 8px 0;
+    width: 100%;
+  }
+
+  /* Tooltip styling */
+  .box-tooltip {
+    display: inline-block;
+    visibility: hidden;
+    opacity: 0;
+    position: absolute;
+    transform: translateY(-6px);
+    background: rgba(34,34,34,0.95);
+    color: white;
+    padding: 6px 8px;
+    border-radius: 6px;
+    font-size: 0.8rem;
+    white-space: nowrap;
+    z-index: 100;
+    transition: opacity 0.15s ease, transform 0.15s ease;
+    pointer-events: none;
+  }
+
+  /* make the title position context so absolute tooltip is positioned relative to it */
+  .box-title { position: relative; display: inline-block; }
+
+  /* show tooltip on hover or when title receives keyboard focus */
+  .box-title:hover .box-tooltip,
+  .box-title:focus .box-tooltip,
+  .box-title:focus-within .box-tooltip {
+    visibility: visible;
+    opacity: 1;
+    transform: translateY(-10px);
+    pointer-events: auto;
+  }
+
+  /* small caret under tooltip (optional) */
+  .box-tooltip::after {
+    content: '';
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+    bottom: -6px;
+    border-width: 6px 6px 0 6px;
+    border-style: solid;
+    border-color: rgba(34,34,34,0.95) transparent transparent transparent;
+  }
+
+  /* Image hover tooltip: show the name stored in data-name on the container */
+  .selected-box[data-name] {
+    position: relative; /* create positioning context for tooltip */
+  }
+
+  .selected-box[data-name]::before {
+    content: attr(data-name);
+    position: absolute;
+    bottom: calc(100% + 8px);
+    left: 50%;
+    transform: translateX(-50%) translateY(6px);
+    background: rgba(34,34,34,0.95);
+    color: #fff;
+    padding: 6px 8px;
+    border-radius: 6px;
+    font-size: 0.8rem;
+    white-space: nowrap;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.12s ease, transform 0.12s ease;
+    z-index: 120;
+  }
+
+  /* small caret for the image tooltip */
+  .selected-box[data-name]::after {
+    content: '';
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+    bottom: calc(100% + 2px);
+    border-width: 6px 6px 0 6px;
+    border-style: solid;
+    border-color: rgba(34,34,34,0.95) transparent transparent transparent;
+    opacity: 0;
+    transition: opacity 0.12s ease;
+    z-index: 119;
+  }
+
+  /* show on hover or keyboard focus */
+  .selected-box[data-name]:hover::before,
+  .selected-box[data-name]:hover::after,
+  .selected-box[data-name]:focus::before,
+  .selected-box[data-name]:focus::after {
+    opacity: 1;
+    transform: translateX(-50%) translateY(0);
+  }
+
+  /* Place each box in its own column so all are equal size */
+  /* explicit columns are optional with equal columns, but keep mapping for clarity */
+  .image-box { grid-column: 1; }
+  .name-box  { grid-column: 2; }
+  .desc-box  { grid-column: 3; }
+  .hair-box  { grid-column: 4; }
+  .country-box    { grid-column: 5; }
+  .arche-box    { grid-column: 6; }
+
+  .box-title {
+    font-size: 0.75rem;
+    color: #5577aa;
+    margin-bottom: 8px;
+    font-weight: 600;
+  }
+
+  .box-content {
+    color: #222;
+    /* prefer normal word breaking but allow long words to break when necessary */
+    word-break: normal;
+    overflow-wrap: break-word;
+    line-height: 1.05;
+    /* scale font responsively; lower the minimum so text can shrink rather than overflow */
+    font-size: clamp(0.5rem, 0.9vw, 1rem);
+    /* do not insert hyphens when breaking words */
+    hyphens: none;
+    overflow: visible;
+    text-overflow: clip;
+    display: block;
+  }
+
+  /* Reduce font size when the box becomes narrow using container queries (modern browsers) */
+  .box-wrapper { container-type: inline-size; }
+
+  @container (max-width: 140px) {
+    .box-content { font-size: 0.8rem; }
+  }
+
+  @container (max-width: 110px) {
+    .box-content { font-size: 0.7rem; }
+  }
+
+  /* Fallback for browsers without container queries: use grid column width breakpoints */
+  @media (max-width: 900px) {
+    .box-content { font-size: 0.95rem; }
+  }
+
+  @media (max-width: 640px) {
+    .box-content { font-size: 0.9rem; }
+  }
+
+  .display-photo { max-width: 100%; max-height: 100%; object-fit: cover; border-radius: 6px; border: none; display: block; margin: 0 auto; }
+
+  /* Responsive: stack boxes on narrow screens */
+  @media (max-width: 640px) {
+    .selected-grid {
+      grid-template-columns: 1fr;
+      grid-auto-rows: auto;
+    }
+    .image-box, .name-box, .desc-box, .id-box {
+      grid-column: auto !important;
+    }
+    .display-photo { width: 80px; height: 80px; }
+  }
+
+  /* Recent selections (below selected grid) - compact version of selected-item layout */
+  .recent-selections { margin-top: 14px; padding-top: 12px; border-top: 1px dashed #e6eef9; }
+  .recent-title { margin: 0 0 8px 0; font-size: 0.95rem; color: #334; }
+  /* stack recent selections vertically (newest first at top) */
+  .recent-list { display: flex; flex-direction: column; gap: 8px; }
+  .recent-tile { cursor:pointer; padding:8px 6px; background: #fff; border-radius:8px; border:1px solid #eef6ff; width: 100%; box-sizing: border-box; }
+  /* match the selected-grid layout but compact */
+  .recent-grid { display: grid; grid-template-columns: repeat(6, 1fr); grid-auto-rows: auto; gap:6px; align-items: start; }
+  .recent-selected-box { aspect-ratio: 1/1; padding:6px; }
+  /* ensure recent-selected-box default (non-match) retains neutral look unless random-match applied */
+  .recent-selected-box { border: 1px solid #e6eef9; background: white; }
+  .recent-tile .box-title.small { font-size:0.7rem; color:#5577aa; margin-bottom:6px; }
+  .recent-tile .box-content { font-size:0.78rem; }
+
+  /* force slightly smaller content in very tight recent boxes */
+  .recent-tile .box-content {
+    /* slightly smaller clamp for compact recent tiles */
+    font-size: clamp(0.45rem, 0.8vw, 0.78rem);
+    word-break: normal;
+    overflow-wrap: break-word;
+    hyphens: none;
+  }
+
+  /* ensure recent-tile inner grid and wrappers compress nicely on small widths */
+  .recent-tile { padding: 6px; }
+  .recent-grid .box-title { margin-bottom: 6px; }
+
+  /* recent history boxes default to a subtle red accent */
+  .recent-tile .selected-box {
+    border-color: #f5b0b0; /* light red border */
+    background: linear-gradient(180deg, #ffffff, #fff5f5);
+  }
+
+  /* but when a recent tile matches the randomItem, make it green instead */
+  .recent-tile.random-match .selected-box {
+    border-color: #6fc36f; /* accent green */
+    background: linear-gradient(180deg, #ffffff, #f4fff4);
+  }
+
+  /* If an individual box inside a recent tile matches the randomItem, override the default red and make that box green */
+  .recent-tile .selected-box.box-random-match {
+    border-color: #6fc36f; /* accent green for matched property */
+    background: linear-gradient(180deg, #ffffff, #f4fff4);
+  }
+
+  /* Individual selected-box that matches the randomItem's corresponding property */
+  .selected-box.box-random-match {
+    border-color: #b3d9a8; /* lighter green when matching a single property */
+    background: linear-gradient(180deg, #ffffff, #f8fff7);
+  }
+
+  /* If the entire container is a random-match, force the boxes to the stronger green style (higher precedence) */
+  .item-card.random-match > .selected-grid .selected-box.box-random-match,
+  .recent-tile.random-match .selected-grid .selected-box.box-random-match {
+    border-color: #5fbf5f; /* stronger green */
+    background: linear-gradient(180deg, #ffffff, #f4fff4);
+  }
+
+  
