@@ -5,6 +5,14 @@
       <span class="random-preview-value">{{ randomItem()?.name || '—' }}</span>
     </div>
     -->
+    <!-- Add this to your search.html file -->
+  <div class="congrats-overlay" [class.show]="isComplete()">
+    <div class="congrats-box">
+      <h2>Congratulations!</h2>
+      <p>You guessed the character correctly!</p>
+      <button class="play-again-button" (click)="playAgain()">Play Again</button>
+    </div>
+  </div>
     
     <h1 class="text-xl font-bold text-gray-800 mb-6">Street Fighter 6 dle</h1>
      

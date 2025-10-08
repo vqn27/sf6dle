@@ -44,6 +44,14 @@ export class Search implements OnInit {
     return source.filter(item => item.name.toLowerCase().includes(term));
   });
 
+  /**
+   * Computed signal that returns true if the user has guessed the correct item.
+   */
+  isComplete = computed(() => {
+    const selected = this.selectedItem();
+    return selected && selected.id === this.randomItem()?.id;
+  });
+
   ngOnInit() {
     // Pick a random item on startup and store it separately; fall back to first item selection if none found
     const picked = this.selectRandomItem();
@@ -109,5 +117,13 @@ export class Search implements OnInit {
     // instead of auto-selecting, store the random item separately so caller can decide what to do with it
     this.randomItem.set(item);
     return item;
+  }
+
+  /**
+   * Resets the game to start a new round.
+   */
+  playAgain(): void {
+    this.clearHistory();
+    this.selectRandomItem();
   }
 }
